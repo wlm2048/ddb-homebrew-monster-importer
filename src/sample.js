@@ -1,7 +1,7 @@
     // =========================================================================
     // SAMPLE JSON
     // Loaded via the "Load Sample (Gutterwight)" button in the import modal.
-    // Keep in sync with fixtures/gutterwight.json — that file is the canonical
+    // Keep in sync with fixtures/monsters/gutterwight.json — that file is the canonical
     // tested fixture; this is just the in-modal convenience copy.
     // =========================================================================
 

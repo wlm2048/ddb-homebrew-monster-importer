@@ -38,7 +38,7 @@ The script activates automatically on any DnD Beyond homebrew monster create or 
 
 See [JSON_Reference.md](JSON_Reference.md) for the full field reference, valid enum values, and HTML formatting guide for rich text fields.
 
-A working example is in [`fixtures/gutterwight.json`](fixtures/gutterwight.json) — a CR 5 undead with traits, a recharge action, and all sub-page data.
+A working example is in [`fixtures/monsters/gutterwight.json`](fixtures/monsters/gutterwight.json) — a CR 5 undead with traits, a recharge action, and all sub-page data.
 
 ---
 
@@ -193,7 +193,15 @@ Create a CR 10 Aberration that has a high intelligence and can innately cast sev
 ## Validating JSON
 
 ### VS Code
-The repo includes a [JSON Schema](monster.schema.json) that wires up automatically for any file in `fixtures/`. You'll see inline errors and autocomplete with no setup needed.
+wires up automatically for any file in `fixtures/monsters/` or `my-fixtures/monsters/`. You'll see inline errors and autocomplete with no setup needed.
+
+### Storing your own monsters locally
+
+Create a `my-fixtures/monsters/` directory at the repo root to store monsters you don't want to commit (campaign creatures, works in progress, etc.). It is listed in `.gitignore` so it will never be pushed to GitHub. The schema applies there automatically in VS Code.
+
+```bash
+mkdir my-fixtures\monsters
+```
 
 To validate any other file, add this line at the top of your JSON:
 ```json
