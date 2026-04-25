@@ -3,10 +3,10 @@
     // =========================================================================
 
     function openImportModal(isCreatePage) {
-        document.getElementById('bcn-import-modal')?.remove();
+        document.getElementById('ddb-import-modal')?.remove();
 
         const overlay = document.createElement('div');
-        overlay.id = 'bcn-import-modal';
+        overlay.id = 'ddb-import-modal';
         overlay.style.cssText = `
             position:fixed;inset:0;background:rgba(0,0,0,0.78);
             z-index:99998;display:flex;align-items:center;justify-content:center;
@@ -34,31 +34,31 @@
 
         modal.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <h2 style="margin:0;font-size:19px;color:#fff;">BCN Monster Importer <span style="font-size:13px;color:#888;font-weight:normal;">v2.0</span></h2>
-                <button id="bcn-close-btn" style="background:none;border:none;color:#aaa;font-size:26px;cursor:pointer;line-height:1;padding:0 4px;">×</button>
+                <h2 style="margin:0;font-size:19px;color:#fff;">DDB Homebrew Monster Importer <span style="font-size:13px;color:#888;font-weight:normal;">v2.0</span></h2>
+                <button id="ddb-close-btn" style="background:none;border:none;color:#aaa;font-size:26px;cursor:pointer;line-height:1;padding:0 4px;">×</button>
             </div>
             <div style="background:#1e2a1e;border:1px solid #3a5a3a;border-radius:4px;padding:10px 14px;font-size:13px;color:#9db;line-height:1.6;">
                 ${instructions}
             </div>
-            <textarea id="bcn-json-input" spellcheck="false" style="
+            <textarea id="ddb-json-input" spellcheck="false" style="
                 flex:1;min-height:320px;background:#0d1012;color:#cfc;
                 border:1px solid #555;border-radius:4px;padding:10px;
                 font-family:monospace;font-size:12px;resize:vertical;tab-size:2;
             " placeholder="Paste monster JSON here…"></textarea>
-            <div id="bcn-error-msg" style="color:#f88;font-size:12px;min-height:16px;"></div>
+            <div id="ddb-error-msg" style="color:#f88;font-size:12px;min-height:16px;"></div>
             <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-                <button id="bcn-sample-btn" style="
+                <button id="ddb-sample-btn" style="
                     background:#2a3540;color:#ccc;border:1px solid #555;
                     padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;">
                     Load Sample (Gutterwight)
                 </button>
-                <button id="bcn-fillonly-btn" style="
+                <button id="ddb-fillonly-btn" style="
                     background:#2a3540;color:#ccc;border:1px solid #555;
                     padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;">
                     ${isCreatePage ? 'Fill &amp; Continue →' : 'Fill Form Only'}
                 </button>
                 ${isCreatePage ? '' : `
-                <button id="bcn-import-btn" style="
+                <button id="ddb-import-btn" style="
                     background:#1a6b2e;color:#fff;border:none;
                     padding:8px 22px;border-radius:4px;cursor:pointer;
                     font-size:13px;font-weight:700;letter-spacing:.3px;">
@@ -70,19 +70,19 @@
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
-        document.getElementById('bcn-close-btn')
+        document.getElementById('ddb-close-btn')
             .addEventListener('click', () => overlay.remove());
         overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
-        document.getElementById('bcn-sample-btn').addEventListener('click', () => {
-            document.getElementById('bcn-json-input').value = buildSampleJson();
-            document.getElementById('bcn-error-msg').textContent = '';
+        document.getElementById('ddb-sample-btn').addEventListener('click', () => {
+            document.getElementById('ddb-json-input').value = buildSampleJson();
+            document.getElementById('ddb-error-msg').textContent = '';
         });
 
         // "Fill Form Only" on edit page, or "Fill & Continue" on create page
-        document.getElementById('bcn-fillonly-btn').addEventListener('click', () => {
-            const raw = document.getElementById('bcn-json-input').value.trim();
-            const errEl = document.getElementById('bcn-error-msg');
+        document.getElementById('ddb-fillonly-btn').addEventListener('click', () => {
+            const raw = document.getElementById('ddb-json-input').value.trim();
+            const errEl = document.getElementById('ddb-error-msg');
             if (!raw) { errEl.textContent = 'Paste your JSON first.'; return; }
             let data;
             try { data = JSON.parse(raw); }
@@ -105,18 +105,18 @@
                         showBanner('✓ Form filled. Click Save to create the monster.');
                     }
                 } else {
-                    if (errs.length) alert('[BCN] Warnings:\n' + errs.map(e => '• ' + e).join('\n'));
+                    if (errs.length) alert('[DDB] Warnings:\n' + errs.map(e => '• ' + e).join('\n'));
                     else showBanner('✓ Form filled. Review and click Save Changes when ready.');
                 }
             }, 100);
         });
 
         // "Import & Save All" — edit page only
-        const importBtn = document.getElementById('bcn-import-btn');
+        const importBtn = document.getElementById('ddb-import-btn');
         if (importBtn) {
             importBtn.addEventListener('click', () => {
-                const raw = document.getElementById('bcn-json-input').value.trim();
-                const errEl = document.getElementById('bcn-error-msg');
+                const raw = document.getElementById('ddb-json-input').value.trim();
+                const errEl = document.getElementById('ddb-error-msg');
                 if (!raw) { errEl.textContent = 'Paste your JSON first.'; return; }
                 let data;
                 try { data = JSON.parse(raw); }
@@ -129,14 +129,14 @@
     }
 
     function injectButton() {
-        if (document.getElementById('bcn-import-open-btn')) return;
+        if (document.getElementById('ddb-import-open-btn')) return;
 
         const path = window.location.pathname;
         const isCreatePage = path === '/homebrew/creations/create-monster'
                           || path === '/homebrew/creations/create-monster/create';
 
         const btn = document.createElement('button');
-        btn.id = 'bcn-import-open-btn';
+        btn.id = 'ddb-import-open-btn';
         btn.type = 'button';
         btn.textContent = '⬇ Import JSON';
         btn.style.cssText = `

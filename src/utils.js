@@ -8,7 +8,7 @@
 
     function setInput(id, value) {
         const el = document.getElementById(id);
-        if (!el) { console.warn('[BCN] input not found:', id); return false; }
+        if (!el) { console.warn('[DDB] input not found:', id); return false; }
         el.value = value;
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
@@ -17,7 +17,7 @@
 
     function setSelect(id, value) {
         const el = document.getElementById(id);
-        if (!el) { console.warn('[BCN] select not found:', id); return false; }
+        if (!el) { console.warn('[DDB] select not found:', id); return false; }
         el.value = value;
         el.dispatchEvent(new Event('change', { bubbles: true }));
         return true;
@@ -37,7 +37,7 @@
 
     function setSelect2(selectId, numericValues) {
         const el = document.getElementById(selectId);
-        if (!el) { console.warn('[BCN] select2 not found:', selectId); return; }
+        if (!el) { console.warn('[DDB] select2 not found:', selectId); return; }
         const jqEl = window.jQuery ? jQuery('#' + selectId) : null;
         if (jqEl && jqEl.data('select2')) {
             jqEl.val(numericValues.map(String)).trigger('change');
@@ -67,7 +67,7 @@
         // Always write — empty string clears DnD Beyond's placeholder text.
         const content = html || '';
         const textarea = document.getElementById(fieldId);
-        if (!textarea) { console.warn('[BCN] richtext not found:', fieldId); return; }
+        if (!textarea) { console.warn('[DDB] richtext not found:', fieldId); return; }
 
         // Always set the underlying textarea value — this covers fields that are
         // disabled (legendary, mythic, lair) where TinyMCE has no active instance.
@@ -95,7 +95,7 @@
 
     // Log all form fields to console — invaluable when a sub-page has unknown IDs.
     function dumpFormFields() {
-        console.group('[BCN] Form field inventory for: ' + window.location.pathname);
+        console.group('[DDB] Form field inventory for: ' + window.location.pathname);
         document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
             const val = el.type === 'select-one' || el.type === 'select-multiple'
                 ? `selected="${el.value}"` : `value="${el.value}"`;
@@ -105,9 +105,9 @@
     }
 
     function showBanner(message, colour) {
-        document.getElementById('bcn-banner')?.remove();
+        document.getElementById('ddb-banner')?.remove();
         const banner = document.createElement('div');
-        banner.id = 'bcn-banner';
+        banner.id = 'ddb-banner';
         banner.style.cssText = `
             position:fixed;top:16px;left:50%;transform:translateX(-50%);
             background:${colour || '#1a6b2e'};color:#fff;padding:12px 28px;
@@ -123,9 +123,9 @@
     // Persistent prompt shown on sub-pages — stays until the user clicks Save.
     // Avoids DnD Beyond's anti-automation login redirect triggered by scripted submits.
     function showSavePrompt(statusText) {
-        document.getElementById('bcn-save-prompt')?.remove();
+        document.getElementById('ddb-save-prompt')?.remove();
         const prompt = document.createElement('div');
-        prompt.id = 'bcn-save-prompt';
+        prompt.id = 'ddb-save-prompt';
         prompt.style.cssText = `
             position:fixed;top:0;left:0;right:0;
             background:#1a3a5c;color:#fff;padding:14px 24px;
@@ -135,9 +135,9 @@
         `;
         prompt.innerHTML = `
             <span style="flex:1;line-height:1.5;">
-                <strong style="color:#7dd;">⬇ BCN Importer</strong> — ${statusText}
+                <strong style="color:#7dd;">⬇ DDB Importer</strong> — ${statusText}
             </span>
-            <button id="bcn-save-now-btn" style="
+            <button id="ddb-save-now-btn" style="
                 background:#1a6b2e;color:#fff;border:none;padding:10px 22px;
                 border-radius:4px;cursor:pointer;font-size:14px;font-weight:700;
                 white-space:nowrap;flex-shrink:0;
@@ -147,7 +147,7 @@
 
         // Wire the button to the page's actual Save button so the user only needs
         // to click our clearly-visible button rather than hunting for DnD Beyond's
-        document.getElementById('bcn-save-now-btn').addEventListener('click', () => {
+        document.getElementById('ddb-save-now-btn').addEventListener('click', () => {
             prompt.remove();
             if (window.tinyMCE) { try { tinyMCE.triggerSave(); } catch(e) {} }
             const saveBtn = document.querySelector('button[type=submit], input[type=submit]')
@@ -160,7 +160,7 @@
     function submitPageForm() {
         if (window.tinyMCE) { try { tinyMCE.triggerSave(); } catch (e) {} }
         const form = document.querySelector('form');
-        if (!form) { console.error('[BCN] No form to submit'); return; }
+        if (!form) { console.error('[DDB] No form to submit'); return; }
         const btn = form.querySelector('button[type=submit], input[type=submit]')
                  || form.querySelector('button.button')
                  || form.querySelector('button');

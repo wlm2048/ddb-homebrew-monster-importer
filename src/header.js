@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         BCN Monster Importer
-// @namespace    https://github.com/bcn/monster-importer
+// @name         DDB Homebrew Monster Importer
+// @namespace    https://github.com/wlm2048/ddb-homebrew-monster-importer
 // @version      2.0.0
 // @description  Import homebrew monsters into DnD Beyond from JSON — main form + Languages/Senses/Skills/Movement sub-pages
 // @author       Bill Martin <wlm2048@gmail.com>
@@ -21,8 +21,8 @@
 
     // Guard against Tampermonkey injecting this multiple times on the same page
     // (happens when TinyMCE editor init triggers extra document events).
-    if (window.__bcnImporterLoaded) return;
-    window.__bcnImporterLoaded = true;
+    if (window.__ddbImporterLoaded) return;
+    window.__ddbImporterLoaded = true;
 
     // Guard against running inside a TinyMCE iframe — we only want the top frame.
     if (window !== window.top) return;
@@ -31,4 +31,4 @@
     // SESSION STORAGE KEY
     // Used to pass the JSON payload across page navigations.
     // =========================================================================
-    const SS_KEY = 'bcn_importer_payload';
+    const SS_KEY = 'ddb_importer_payload';

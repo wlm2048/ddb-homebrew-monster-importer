@@ -10,7 +10,7 @@ Tested with DnD Beyond's 2024 form layout (5.5e stat blocks).
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) for your browser.
 2. Open Tampermonkey → **Create a new script**.
-3. Paste the full contents of [`bcn-importer.user.js`](bcn-importer.user.js) and save.
+3. Paste the full contents of [`ddb-homebrew-monster-importer.user.js`](ddb-homebrew-monster-importer.user.js) and save.
 
 The script activates automatically on any DnD Beyond homebrew monster create or edit page.
 
@@ -243,7 +243,7 @@ Paste the contents of `monster.schema.json` and your monster JSON into **[jsonsc
 
 ## Development
 
-The deployed file (`bcn-importer.user.js`) is generated from the `src/` directory. Edit source files there, then rebuild:
+The deployed file (`ddb-homebrew-monster-importer.user.js`) is generated from the `src/` directory. Edit source files there, then rebuild:
 
 ```bash
 node build.js

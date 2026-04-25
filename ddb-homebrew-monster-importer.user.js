@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         BCN Monster Importer
-// @namespace    https://github.com/bcn/monster-importer
+// @name         DDB Homebrew Monster Importer
+// @namespace    https://github.com/wlm2048/ddb-homebrew-monster-importer
 // @version      2.0.0
 // @description  Import homebrew monsters into DnD Beyond from JSON — main form + Languages/Senses/Skills/Movement sub-pages
 // @author       Bill Martin <wlm2048@gmail.com>
@@ -21,8 +21,8 @@
 
     // Guard against Tampermonkey injecting this multiple times on the same page
     // (happens when TinyMCE editor init triggers extra document events).
-    if (window.__bcnImporterLoaded) return;
-    window.__bcnImporterLoaded = true;
+    if (window.__ddbImporterLoaded) return;
+    window.__ddbImporterLoaded = true;
 
     // Guard against running inside a TinyMCE iframe — we only want the top frame.
     if (window !== window.top) return;
@@ -31,7 +31,7 @@
     // SESSION STORAGE KEY
     // Used to pass the JSON payload across page navigations.
     // =========================================================================
-    const SS_KEY = 'bcn_importer_payload';
+    const SS_KEY = 'ddb_importer_payload';
 
     // =========================================================================
     // SELECT OPTION VALUE MAPS
@@ -219,7 +219,7 @@
 
     function setInput(id, value) {
         const el = document.getElementById(id);
-        if (!el) { console.warn('[BCN] input not found:', id); return false; }
+        if (!el) { console.warn('[DDB] input not found:', id); return false; }
         el.value = value;
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
@@ -228,7 +228,7 @@
 
     function setSelect(id, value) {
         const el = document.getElementById(id);
-        if (!el) { console.warn('[BCN] select not found:', id); return false; }
+        if (!el) { console.warn('[DDB] select not found:', id); return false; }
         el.value = value;
         el.dispatchEvent(new Event('change', { bubbles: true }));
         return true;
@@ -248,7 +248,7 @@
 
     function setSelect2(selectId, numericValues) {
         const el = document.getElementById(selectId);
-        if (!el) { console.warn('[BCN] select2 not found:', selectId); return; }
+        if (!el) { console.warn('[DDB] select2 not found:', selectId); return; }
         const jqEl = window.jQuery ? jQuery('#' + selectId) : null;
         if (jqEl && jqEl.data('select2')) {
             jqEl.val(numericValues.map(String)).trigger('change');
@@ -278,7 +278,7 @@
         // Always write — empty string clears DnD Beyond's placeholder text.
         const content = html || '';
         const textarea = document.getElementById(fieldId);
-        if (!textarea) { console.warn('[BCN] richtext not found:', fieldId); return; }
+        if (!textarea) { console.warn('[DDB] richtext not found:', fieldId); return; }
 
         // Always set the underlying textarea value — this covers fields that are
         // disabled (legendary, mythic, lair) where TinyMCE has no active instance.
@@ -306,7 +306,7 @@
 
     // Log all form fields to console — invaluable when a sub-page has unknown IDs.
     function dumpFormFields() {
-        console.group('[BCN] Form field inventory for: ' + window.location.pathname);
+        console.group('[DDB] Form field inventory for: ' + window.location.pathname);
         document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
             const val = el.type === 'select-one' || el.type === 'select-multiple'
                 ? `selected="${el.value}"` : `value="${el.value}"`;
@@ -316,9 +316,9 @@
     }
 
     function showBanner(message, colour) {
-        document.getElementById('bcn-banner')?.remove();
+        document.getElementById('ddb-banner')?.remove();
         const banner = document.createElement('div');
-        banner.id = 'bcn-banner';
+        banner.id = 'ddb-banner';
         banner.style.cssText = `
             position:fixed;top:16px;left:50%;transform:translateX(-50%);
             background:${colour || '#1a6b2e'};color:#fff;padding:12px 28px;
@@ -334,9 +334,9 @@
     // Persistent prompt shown on sub-pages — stays until the user clicks Save.
     // Avoids DnD Beyond's anti-automation login redirect triggered by scripted submits.
     function showSavePrompt(statusText) {
-        document.getElementById('bcn-save-prompt')?.remove();
+        document.getElementById('ddb-save-prompt')?.remove();
         const prompt = document.createElement('div');
-        prompt.id = 'bcn-save-prompt';
+        prompt.id = 'ddb-save-prompt';
         prompt.style.cssText = `
             position:fixed;top:0;left:0;right:0;
             background:#1a3a5c;color:#fff;padding:14px 24px;
@@ -346,9 +346,9 @@
         `;
         prompt.innerHTML = `
             <span style="flex:1;line-height:1.5;">
-                <strong style="color:#7dd;">⬇ BCN Importer</strong> — ${statusText}
+                <strong style="color:#7dd;">⬇ DDB Importer</strong> — ${statusText}
             </span>
-            <button id="bcn-save-now-btn" style="
+            <button id="ddb-save-now-btn" style="
                 background:#1a6b2e;color:#fff;border:none;padding:10px 22px;
                 border-radius:4px;cursor:pointer;font-size:14px;font-weight:700;
                 white-space:nowrap;flex-shrink:0;
@@ -358,7 +358,7 @@
 
         // Wire the button to the page's actual Save button so the user only needs
         // to click our clearly-visible button rather than hunting for DnD Beyond's
-        document.getElementById('bcn-save-now-btn').addEventListener('click', () => {
+        document.getElementById('ddb-save-now-btn').addEventListener('click', () => {
             prompt.remove();
             if (window.tinyMCE) { try { tinyMCE.triggerSave(); } catch(e) {} }
             const saveBtn = document.querySelector('button[type=submit], input[type=submit]')
@@ -371,7 +371,7 @@
     function submitPageForm() {
         if (window.tinyMCE) { try { tinyMCE.triggerSave(); } catch (e) {} }
         const form = document.querySelector('form');
-        if (!form) { console.error('[BCN] No form to submit'); return; }
+        if (!form) { console.error('[DDB] No form to submit'); return; }
         const btn = form.querySelector('button[type=submit], input[type=submit]')
                  || form.querySelector('button.button')
                  || form.querySelector('button');
@@ -444,7 +444,7 @@
                 ? `Cannot navigate to languages — entity ID not found. Open the edit page once, then re-run.`
                 : `Cannot build URL for "${next}" — monsterId: ${monsterId}`;
             showBanner('⚠ ' + msg, '#c0392b');
-            console.error('[BCN]', msg);
+            console.error('[DDB]', msg);
             return;
         }
 
@@ -776,7 +776,7 @@
         const queue = buildQueue(data);
 
         if (errors.length) {
-            alert('[BCN] Warnings:\n' + errors.map(e => '• ' + e).join('\n') + '\n\nAll other fields filled.');
+            alert('[DDB] Warnings:\n' + errors.map(e => '• ' + e).join('\n') + '\n\nAll other fields filled.');
         }
 
         if (queue.length === 0) {
@@ -869,10 +869,10 @@
     // =========================================================================
 
     function openImportModal(isCreatePage) {
-        document.getElementById('bcn-import-modal')?.remove();
+        document.getElementById('ddb-import-modal')?.remove();
 
         const overlay = document.createElement('div');
-        overlay.id = 'bcn-import-modal';
+        overlay.id = 'ddb-import-modal';
         overlay.style.cssText = `
             position:fixed;inset:0;background:rgba(0,0,0,0.78);
             z-index:99998;display:flex;align-items:center;justify-content:center;
@@ -900,31 +900,31 @@
 
         modal.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <h2 style="margin:0;font-size:19px;color:#fff;">BCN Monster Importer <span style="font-size:13px;color:#888;font-weight:normal;">v2.0</span></h2>
-                <button id="bcn-close-btn" style="background:none;border:none;color:#aaa;font-size:26px;cursor:pointer;line-height:1;padding:0 4px;">×</button>
+                <h2 style="margin:0;font-size:19px;color:#fff;">DDB Homebrew Monster Importer <span style="font-size:13px;color:#888;font-weight:normal;">v2.0</span></h2>
+                <button id="ddb-close-btn" style="background:none;border:none;color:#aaa;font-size:26px;cursor:pointer;line-height:1;padding:0 4px;">×</button>
             </div>
             <div style="background:#1e2a1e;border:1px solid #3a5a3a;border-radius:4px;padding:10px 14px;font-size:13px;color:#9db;line-height:1.6;">
                 ${instructions}
             </div>
-            <textarea id="bcn-json-input" spellcheck="false" style="
+            <textarea id="ddb-json-input" spellcheck="false" style="
                 flex:1;min-height:320px;background:#0d1012;color:#cfc;
                 border:1px solid #555;border-radius:4px;padding:10px;
                 font-family:monospace;font-size:12px;resize:vertical;tab-size:2;
             " placeholder="Paste monster JSON here…"></textarea>
-            <div id="bcn-error-msg" style="color:#f88;font-size:12px;min-height:16px;"></div>
+            <div id="ddb-error-msg" style="color:#f88;font-size:12px;min-height:16px;"></div>
             <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-                <button id="bcn-sample-btn" style="
+                <button id="ddb-sample-btn" style="
                     background:#2a3540;color:#ccc;border:1px solid #555;
                     padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;">
                     Load Sample (Gutterwight)
                 </button>
-                <button id="bcn-fillonly-btn" style="
+                <button id="ddb-fillonly-btn" style="
                     background:#2a3540;color:#ccc;border:1px solid #555;
                     padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;">
                     ${isCreatePage ? 'Fill &amp; Continue →' : 'Fill Form Only'}
                 </button>
                 ${isCreatePage ? '' : `
-                <button id="bcn-import-btn" style="
+                <button id="ddb-import-btn" style="
                     background:#1a6b2e;color:#fff;border:none;
                     padding:8px 22px;border-radius:4px;cursor:pointer;
                     font-size:13px;font-weight:700;letter-spacing:.3px;">
@@ -936,19 +936,19 @@
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
-        document.getElementById('bcn-close-btn')
+        document.getElementById('ddb-close-btn')
             .addEventListener('click', () => overlay.remove());
         overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
-        document.getElementById('bcn-sample-btn').addEventListener('click', () => {
-            document.getElementById('bcn-json-input').value = buildSampleJson();
-            document.getElementById('bcn-error-msg').textContent = '';
+        document.getElementById('ddb-sample-btn').addEventListener('click', () => {
+            document.getElementById('ddb-json-input').value = buildSampleJson();
+            document.getElementById('ddb-error-msg').textContent = '';
         });
 
         // "Fill Form Only" on edit page, or "Fill & Continue" on create page
-        document.getElementById('bcn-fillonly-btn').addEventListener('click', () => {
-            const raw = document.getElementById('bcn-json-input').value.trim();
-            const errEl = document.getElementById('bcn-error-msg');
+        document.getElementById('ddb-fillonly-btn').addEventListener('click', () => {
+            const raw = document.getElementById('ddb-json-input').value.trim();
+            const errEl = document.getElementById('ddb-error-msg');
             if (!raw) { errEl.textContent = 'Paste your JSON first.'; return; }
             let data;
             try { data = JSON.parse(raw); }
@@ -971,18 +971,18 @@
                         showBanner('✓ Form filled. Click Save to create the monster.');
                     }
                 } else {
-                    if (errs.length) alert('[BCN] Warnings:\n' + errs.map(e => '• ' + e).join('\n'));
+                    if (errs.length) alert('[DDB] Warnings:\n' + errs.map(e => '• ' + e).join('\n'));
                     else showBanner('✓ Form filled. Review and click Save Changes when ready.');
                 }
             }, 100);
         });
 
         // "Import & Save All" — edit page only
-        const importBtn = document.getElementById('bcn-import-btn');
+        const importBtn = document.getElementById('ddb-import-btn');
         if (importBtn) {
             importBtn.addEventListener('click', () => {
-                const raw = document.getElementById('bcn-json-input').value.trim();
-                const errEl = document.getElementById('bcn-error-msg');
+                const raw = document.getElementById('ddb-json-input').value.trim();
+                const errEl = document.getElementById('ddb-error-msg');
                 if (!raw) { errEl.textContent = 'Paste your JSON first.'; return; }
                 let data;
                 try { data = JSON.parse(raw); }
@@ -995,14 +995,14 @@
     }
 
     function injectButton() {
-        if (document.getElementById('bcn-import-open-btn')) return;
+        if (document.getElementById('ddb-import-open-btn')) return;
 
         const path = window.location.pathname;
         const isCreatePage = path === '/homebrew/creations/create-monster'
                           || path === '/homebrew/creations/create-monster/create';
 
         const btn = document.createElement('button');
-        btn.id = 'bcn-import-open-btn';
+        btn.id = 'ddb-import-open-btn';
         btn.type = 'button';
         btn.textContent = '⬇ Import JSON';
         btn.style.cssText = `
@@ -1113,7 +1113,7 @@
                 return;
             }
 
-            console.log('[BCN Importer v2] Ready. Click "⬇ Import JSON" to begin.');
+            console.log('[DDB Importer v2] Ready. Click "⬇ Import JSON" to begin.');
         }
     }
 

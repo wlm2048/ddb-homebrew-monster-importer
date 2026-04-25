@@ -75,7 +75,7 @@
         const queue = buildQueue(data);
 
         if (errors.length) {
-            alert('[BCN] Warnings:\n' + errors.map(e => '• ' + e).join('\n') + '\n\nAll other fields filled.');
+            alert('[DDB] Warnings:\n' + errors.map(e => '• ' + e).join('\n') + '\n\nAll other fields filled.');
         }
 
         if (queue.length === 0) {

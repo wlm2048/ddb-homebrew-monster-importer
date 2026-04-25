@@ -74,7 +74,7 @@
                 return;
             }
 
-            console.log('[BCN Importer v2] Ready. Click "⬇ Import JSON" to begin.');
+            console.log('[DDB Importer v2] Ready. Click "⬇ Import JSON" to begin.');
         }
     }
 

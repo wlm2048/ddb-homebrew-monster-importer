@@ -64,7 +64,7 @@
                 ? `Cannot navigate to languages — entity ID not found. Open the edit page once, then re-run.`
                 : `Cannot build URL for "${next}" — monsterId: ${monsterId}`;
             showBanner('⚠ ' + msg, '#c0392b');
-            console.error('[BCN]', msg);
+            console.error('[DDB]', msg);
             return;
         }
 

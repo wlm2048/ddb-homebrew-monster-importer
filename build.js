@@ -1,4 +1,4 @@
-// build.js — concatenates src/ files into bcn-importer.user.js
+// build.js — concatenates src/ files into ddb-homebrew-monster-importer.user.js
 // Usage: node build.js
 'use strict';
 
@@ -22,6 +22,6 @@ const output = SRC_FILES
     .map(f => fs.readFileSync(path.join(__dirname, f), 'utf8'))
     .join('\n');
 
-const outFile = path.join(__dirname, 'bcn-importer.user.js');
+const outFile = path.join(__dirname, 'ddb-homebrew-monster-importer.user.js');
 fs.writeFileSync(outFile, output, 'utf8');
 console.log(`Built ${outFile} from ${SRC_FILES.length} source files.`);
