@@ -3,7 +3,7 @@
 // @namespace    https://github.com/bcn/monster-importer
 // @version      2.0.0
 // @description  Import homebrew monsters into DnD Beyond from JSON — main form + Languages/Senses/Skills/Movement sub-pages
-// @author       bill@theb.org
+// @author       Bill Martin <wlm2048@gmail.com>
 // @match        https://www.dndbeyond.com/homebrew/creations/create-monster
 // @match        https://www.dndbeyond.com/homebrew/creations/create-monster/create
 // @match        https://www.dndbeyond.com/homebrew/creations/monsters/*/edit

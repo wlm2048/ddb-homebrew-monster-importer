@@ -190,6 +190,49 @@ Create a CR 10 Aberration that has a high intelligence and can innately cast sev
 
 ---
 
+## Validating JSON
+
+### VS Code
+The repo includes a [JSON Schema](monster.schema.json) that wires up automatically for any file in `fixtures/`. You'll see inline errors and autocomplete with no setup needed.
+
+To validate any other file, add this line at the top of your JSON:
+```json
+{ "$schema": "./monster.schema.json", ... }
+```
+
+### Command line (Node.js, no install required)
+```bash
+node -e "
+const schema  = JSON.parse(require('fs').readFileSync('monster.schema.json', 'utf8'));
+const monster = JSON.parse(require('fs').readFileSync('your-monster.json',   'utf8'));
+const required = schema.required.filter(k => !(k in monster));
+if (required.length) { console.error('Missing required fields:', required); process.exit(1); }
+console.log('Required fields: OK');
+const checks = [
+  ['monsterType', schema.properties.monsterType.enum],
+  ['size',        schema.properties.size.enum],
+  ['cr',          schema.properties.cr.enum],
+];
+let ok = true;
+for (const [field, valid] of checks) {
+  if (monster[field] !== undefined && !valid.includes(monster[field]))
+    { console.error(field + ': invalid value', JSON.stringify(monster[field])); ok = false; }
+}
+if (ok) console.log('All checked fields valid.');
+"
+```
+
+### With ajv-cli (full schema validation)
+```bash
+npm install -g ajv-cli
+ajv validate -s monster.schema.json -d your-monster.json
+```
+
+### Online
+Paste the contents of `monster.schema.json` and your monster JSON into **[jsonschemavalidator.net](https://www.jsonschemavalidator.net/)**.
+
+---
+
 ## Development
 
 The deployed file (`bcn-importer.user.js`) is generated from the `src/` directory. Edit source files there, then rebuild:
