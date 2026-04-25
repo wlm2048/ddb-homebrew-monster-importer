@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "BCN Homebrew Monster",
+  "description": "Monster JSON for the DnD Beyond Homebrew Monster Importer (bcn-importer.user.js). See JSON_Reference.md for full documentation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name", "monsterType", "size", "cr",
+    "ac", "passivePerception", "hp", "hpDieCount", "hpDieValue",
+    "str", "dex", "con", "int", "wis", "cha"
+  ],
+  "properties": {
+
+    "$schema": { "type": "string" },
+
+    "name":          { "type": "string", "minLength": 1, "description": "Monster name as it will appear on DnD Beyond" },
+    "statBlockType": { "type": "string", "enum": ["5.5e", "5e"], "default": "5.5e" },
+    "monsterType": {
+      "type": "string",
+      "enum": [
+        "aberration", "beast", "celestial", "construct", "dragon",
+        "elemental", "fey", "fiend", "giant", "humanoid",
+        "monstrosity", "ooze", "plant", "undead", "unknown"
+      ]
+    },
+    "size": {
+      "type": "string",
+      "enum": ["tiny", "small", "medium", "medium or small", "large", "huge", "gargantuan", "sm", "med", "lg"],
+      "description": "sm/med/lg are legacy Foundry shorthands accepted by the importer"
+    },
+    "alignment": {
+      "type": "string",
+      "enum": [
+        "lawful good", "neutral good", "chaotic good",
+        "lawful neutral", "neutral", "chaotic neutral",
+        "lawful evil", "neutral evil", "chaotic evil",
+        "unaligned", "any alignment",
+        "any evil alignment", "any good alignment",
+        "any chaotic alignment", "any non-lawful alignment", "any non-good alignment"
+      ]
+    },
+    "cr": {
+      "type": "string",
+      "enum": [
+        "0", "1/8", "1/4", "1/2",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"
+      ]
+    },
+
+    "ac":               { "type": "integer", "minimum": 0 },
+    "acType":           { "type": "string" },
+    "initiativeBonus": {
+      "description": "Leave as empty string to use DEX modifier automatically",
+      "oneOf": [
+        { "type": "integer" },
+        { "type": "string", "maxLength": 0 }
+      ]
+    },
+    "passivePerception": { "type": "integer", "minimum": 1 },
+    "hp":               { "type": "integer", "minimum": 1 },
+    "hpDieCount":       { "type": "integer", "minimum": 1 },
+    "hpDieValue":       { "type": "integer", "enum": [4, 6, 8, 10, 12, 20] },
+    "hpModifier":       { "type": "integer", "description": "Flat HP modifier: typically CON modifier × hpDieCount" },
+
+    "str": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "dex": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "con": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "int": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "wis": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "cha": { "type": "integer", "minimum": 1, "maximum": 30 },
+
+    "savingThrows": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "enum": ["str", "dex", "con", "int", "wis", "cha"] }
+    },
+    "saveBonusStr": { "type": "integer", "description": "Override calculated STR save bonus" },
+    "saveBonusDex": { "type": "integer", "description": "Override calculated DEX save bonus" },
+    "saveBonusCon": { "type": "integer", "description": "Override calculated CON save bonus" },
+    "saveBonusInt": { "type": "integer", "description": "Override calculated INT save bonus" },
+    "saveBonusWis": { "type": "integer", "description": "Override calculated WIS save bonus" },
+    "saveBonusCha": { "type": "integer", "description": "Override calculated CHA save bonus" },
+
+    "damageAdjustments": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "bludgeoning - resistance",
+          "piercing - resistance",
+          "slashing - resistance",
+          "lightning - resistance",
+          "thunder - resistance",
+          "poison - resistance",
+          "cold - resistance",
+          "radiant - resistance",
+          "fire - resistance",
+          "necrotic - resistance",
+          "acid - resistance",
+          "psychic - resistance",
+          "force - resistance",
+          "all - resistance",
+          "bludgeoning, piercing, and slashing from nonmagical attacks - resistance",
+          "bludgeoning, piercing, and slashing from nonmagical attacks that aren't silvered - resistance",
+          "bludgeoning, piercing, and slashing from nonmagical attacks that aren't adamantine - resistance",
+          "bludgeoning - immunity",
+          "piercing - immunity",
+          "slashing - immunity",
+          "lightning - immunity",
+          "thunder - immunity",
+          "poison - immunity",
+          "cold - immunity",
+          "radiant - immunity",
+          "fire - immunity",
+          "necrotic - immunity",
+          "acid - immunity",
+          "psychic - immunity",
+          "force - immunity",
+          "all - immunity",
+          "bludgeoning, piercing, and slashing from nonmagical attacks - immunity",
+          "bludgeoning, piercing, and slashing from nonmagical attacks that aren't silvered - immunity",
+          "bludgeoning, piercing, and slashing from nonmagical attacks that aren't adamantine - immunity",
+          "bludgeoning - vulnerability",
+          "piercing - vulnerability",
+          "slashing - vulnerability",
+          "cold - vulnerability",
+          "fire - vulnerability",
+          "necrotic - vulnerability"
+        ]
+      }
+    },
+
+    "conditionImmunities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "blinded", "charmed", "deafened", "exhaustion", "frightened",
+          "grappled", "incapacitated", "invisible", "paralyzed", "petrified",
+          "poisoned", "prone", "restrained", "stunned", "unconscious"
+        ]
+      }
+    },
+
+    "environments": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "any", "arctic", "coastal", "desert", "forest", "grassland",
+          "hill", "mountain", "swamp", "underdark", "underwater", "urban",
+          "planar (shadowfell)", "planar (abyss)", "planar (nine hells)", "planar (feywild)"
+        ]
+      }
+    },
+
+    "gear":         { "type": "string", "description": "Items carried, e.g. \"6 Javelins, Chain Mail\"" },
+    "languageNote": { "type": "string", "description": "Overrides the auto-generated languages line on the stat block" },
+
+    "traits":          { "type": "string", "description": "HTML string — special traits and passive abilities" },
+    "actions":         { "type": "string", "description": "HTML string — actions including Multiattack" },
+    "bonusActions":    { "type": "string", "description": "HTML string — bonus actions" },
+    "reactions":       { "type": "string", "description": "HTML string — reactions" },
+    "characteristics": { "type": "string", "description": "HTML string — monster description / flavour text" },
+
+    "isLegendary":      { "type": "boolean" },
+    "legendaryActions": { "type": "string", "description": "HTML string — only used when isLegendary is true" },
+    "isMythic":         { "type": "boolean" },
+    "mythicActions":    { "type": "string", "description": "HTML string — only used when isMythic is true" },
+    "hasLair":          { "type": "boolean" },
+    "lairDescription":  { "type": "string", "description": "HTML string — only used when hasLair is true" },
+
+    "senses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["blindsight", "darkvision", "tremorsense", "truesight", "unknown"],
+            "description": "Use \"unknown\" for Devil's Sight and other non-standard senses"
+          },
+          "notes": { "type": "string", "description": "e.g. \"60 ft.\" or \"30 ft. (blind beyond this radius)\"" }
+        }
+      }
+    },
+
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "acrobatics", "animal handling", "arcana", "athletics",
+              "deception", "history", "insight", "intimidation", "investigation",
+              "medicine", "nature", "perception", "performance", "persuasion",
+              "religion", "sleight of hand", "stealth", "survival"
+            ]
+          },
+          "value":           { "type": ["string", "number"], "description": "Flat bonus override — omit to use auto-calculated value" },
+          "additionalBonus": { "type": ["string", "number"], "description": "Extra bonus on top of the calculated value" }
+        }
+      }
+    },
+
+    "movement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "speed"],
+        "properties": {
+          "type":  { "type": "string", "enum": ["walk", "burrow", "climb", "fly", "swim"] },
+          "speed": { "type": "integer", "minimum": 0 },
+          "notes": { "type": "string", "description": "e.g. \"(hover)\" — there is no separate hover checkbox on DnD Beyond" }
+        }
+      }
+    },
+
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Lowercase language name as it appears on DnD Beyond. Common values: common, elvish, dwarvish, giant, gnomish, goblin, halfling, orc, abyssal, celestial, draconic, deep speech, infernal, primordial, sylvan, undercommon, aquan, auran, ignan, terran, druidic, thieves' cant, telepathy, all"
+          },
+          "notes":       { "type": "string", "description": "Free-text qualifier, e.g. \"understands but does not speak\"" },
+          "description": { "type": "string", "description": "Alias for notes — accepted by the importer" }
+        }
+      }
+    }
+
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["fixtures/*.json"],
+      "url": "./monster.schema.json"
+    }
+  ]
+}

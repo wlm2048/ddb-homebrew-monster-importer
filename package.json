@@ -1,0 +1,9 @@
+{
+  "name": "ddb-homebrew-monster-importer",
+  "version": "2.0.0",
+  "description": "Tampermonkey userscript to import homebrew monsters into DnD Beyond from JSON",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "license": "MIT"
+}
